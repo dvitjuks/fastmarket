@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "509407682938",
+    "project_id": "fast-market-48da0",
+    "storage_bucket": "fast-market-48da0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509407682938:android:ed6354f482b5cd67cc36c3",
+        "android_client_info": {
+          "package_name": "com.example.fastmarket.fastmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509407682938-uu44om0e352rmb3s2kedlb3rl3ji9d6u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fastmarket.fastmarket",
+            "certificate_hash": "d65e6c44c054eb0fb179c015dcee61926292127b"
+          }
+        },
+        {
+          "client_id": "509407682938-jtpgvnmqe73vk5ce7mkom56fnvo62oo0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDqnd4DEqwFz_ZtABYFDeSTysxSeJszvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509407682938-jtpgvnmqe73vk5ce7mkom56fnvo62oo0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
