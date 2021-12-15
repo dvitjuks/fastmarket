@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "509407682938",
+    "firebase_url": "https://fast-market-48da0-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "fast-market-48da0",
     "storage_bucket": "fast-market-48da0.appspot.com"
   },
@@ -37,6 +38,13 @@
             {
               "client_id": "509407682938-jtpgvnmqe73vk5ce7mkom56fnvo62oo0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "509407682938-q9cisr7qvictf5odp67usi2gqkoi8cdp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fastmarket.fastmarket"
+              }
             }
           ]
         }
