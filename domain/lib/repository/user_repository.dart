@@ -8,4 +8,6 @@ abstract class UserRepository {
   Future<void> saveUser(UserProfile userProfile);
 
   Future<void> deleteUser();
+
+  Future<UserProfile?> getUserById(String id);
 }

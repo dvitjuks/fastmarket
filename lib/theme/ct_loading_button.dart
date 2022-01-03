@@ -25,63 +25,66 @@ class CTLoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: width ?? double.infinity,
-        decoration: withShadow
-            ? BoxDecoration(boxShadow: [
-                BoxShadow(
-                    color: onPressed == null
-                        ? AppColors.disabledShadow.withOpacity(0.16)
-                        : AppColors.enabledShadow.withOpacity(0.16),
-                    spreadRadius: 5,
-                    blurRadius: 20,
-                    offset: Offset(0, 2))
-              ])
-            : BoxDecoration(),
-        child: CustomElevation(
-          color: onPressed == null
-              ? AppColors.disabled1
-              : color ?? AppColors.accentPurple,
-          child: MaterialButton(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                icon != null && !isLoading
-                    ? Padding(
-                        padding: EdgeInsets.only(right: 16),
-                        child: SvgPicture.asset(
-                          icon!,
-                          height: 24,
-                          width: 24,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : Container(),
-                isLoading
-                    ? CircularProgressIndicator()
-                    : Text(
-                        text,
-                        style: AppTypography.body2_bold,
-                      )
-              ],
+    return WillPopScope(
+      onWillPop: () async {return false;},
+      child: Container(
+          width: width ?? double.infinity,
+          decoration: withShadow
+              ? BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      color: onPressed == null
+                          ? AppColors.disabledShadow.withOpacity(0.16)
+                          : AppColors.enabledShadow.withOpacity(0.16),
+                      spreadRadius: 5,
+                      blurRadius: 20,
+                      offset: const Offset(0, 2))
+                ])
+              : const BoxDecoration(),
+          child: CustomElevation(
+            color: onPressed == null
+                ? AppColors.disabled1
+                : color ?? AppColors.accentPurple,
+            child: MaterialButton(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  icon != null && !isLoading
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: SvgPicture.asset(
+                            icon!,
+                            height: 24,
+                            width: 24,
+                            color: AppColors.white,
+                          ),
+                        )
+                      : Container(),
+                  isLoading
+                      ? const CircularProgressIndicator.adaptive(backgroundColor: AppColors.white)
+                      : Text(
+                          text,
+                          style: AppTypography.body2_bold,
+                        )
+                ],
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              height: 64,
+              elevation: 0,
+              disabledElevation: 0,
+              focusElevation: 0,
+              highlightElevation: 0,
+              hoverElevation: 0,
+              textColor: getTextColor(),
+              color: color ?? getColor(),
+              disabledColor: AppColors.disabled1,
+              disabledTextColor: AppColors.white,
+              onPressed: isLoading ? null : onPressed,
             ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            height: 64,
-            elevation: 0,
-            disabledElevation: 0,
-            focusElevation: 0,
-            highlightElevation: 0,
-            hoverElevation: 0,
-            textColor: getTextColor(),
-            color: color ?? getColor(),
-            disabledColor: AppColors.disabled1,
-            disabledTextColor: AppColors.white,
-            onPressed: isLoading ? null : onPressed,
-          ),
-        ));
+          )),
+    );
   }
 
   Color getTextColor() => invert ? AppColors.accentPurple : AppColors.white;

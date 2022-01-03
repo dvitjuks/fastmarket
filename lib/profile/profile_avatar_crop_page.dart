@@ -49,6 +49,12 @@ class _AddPhotoCropPageState extends State<AddPhotoCropPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _bloc.close();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<AddPhotoCropBloc, AddPhotoCropState>(
         listener: (context, state) {
@@ -114,8 +120,9 @@ class _AddPhotoCropPageState extends State<AddPhotoCropPage> {
                       ? () {}
                       : () async {
                           final imagePicker = ImagePicker();
-                          final xFile =
-                              await imagePicker.pickImage(source: source);
+                          final xFile = await imagePicker.pickImage(
+                              source: source,
+                              preferredCameraDevice: CameraDevice.front);
                           if (xFile != null) {
                             file = File(xFile.path);
                           }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:fastmarket/profile/profile_add_avatar_popup.dart';
 import 'package:fastmarket/profile/profile_page_bloc.dart';
 import 'package:fastmarket/theme/colors.dart';
@@ -9,7 +7,6 @@ import 'package:fastmarket/theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,7 +16,8 @@ class ProfilePage extends StatefulWidget {
   static Widget withBloc() => BlocProvider<ProfilePageBloc>(
       child: ProfilePage(),
       create: (context) =>
-          ProfilePageBloc(context.read(), context.read(), context.read())..add(LoadEvent()));
+          ProfilePageBloc(context.read(), context.read(), context.read(), context.read())
+            ..add(LoadEvent()));
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -38,6 +36,22 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildBody(ProfilePageState state) => Scaffold(
+        appBar: AppBar(
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(IconsProvider.PROFILE, color: AppColors.white),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text("My profile",
+                    style: AppTypography.app_bar.copyWith(color: AppColors.white)),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.patternBlue,
+          shadowColor: AppColors.transparent,
+        ),
         backgroundColor: AppColors.white,
         body: SafeArea(
           child: CustomScrollView(slivers: [
@@ -51,8 +65,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       avatarUrl: state.avatarUrl,
                       showEdit: true,
                       onEdit: () async {
-                        ProfileAvatarPopup.showPhotoOptions(context, (url, filename) {
-                            _bloc.add(ChangeProfileUrlEvent(url, filename));
+                        ProfileAvatarPopup.showPhotoOptions(context,
+                            (url, filename) {
+                          _bloc.add(ChangeProfileUrlEvent(url, filename));
                         });
                       },
                     ),

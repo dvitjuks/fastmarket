@@ -1,7 +1,8 @@
 import 'package:domain/model/error_type.dart';
 import 'package:domain/model/user_profile.dart';
 import 'package:domain/repository/auth_repository.dart';
-import 'package:domain/repository/user_avatar_repository.dart';
+import 'package:domain/repository/chat_repository.dart';
+import 'package:domain/repository/image_upload_repository.dart';
 import 'package:domain/repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fimber/fimber.dart';
@@ -13,12 +14,16 @@ class ProfilePageState extends Equatable {
   final String? avatarUrl;
   final ErrorType? error;
 
-  ProfilePageState(this.progress, this.userProfile, this.avatarUrl, this.error);
+  const ProfilePageState(
+      this.progress, this.userProfile, this.avatarUrl, this.error);
 
   ProfilePageState copyWith(
-          {bool? progress, UserProfile? userProfile, String? avatarUrl, ErrorType? error}) =>
-      ProfilePageState(
-          progress ?? this.progress, userProfile ?? this.userProfile, avatarUrl ?? this.avatarUrl, error);
+          {bool? progress,
+          UserProfile? userProfile,
+          String? avatarUrl,
+          ErrorType? error}) =>
+      ProfilePageState(progress ?? this.progress,
+          userProfile ?? this.userProfile, avatarUrl ?? this.avatarUrl, error);
 
   @override
   List<Object?> get props => [progress, userProfile, avatarUrl, error];
@@ -48,10 +53,13 @@ class LogoutEvent extends ProfilePageEvent {}
 class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
-  final UserAvatarRepository _userAvatarRepository;
+  final ImageUploadRepository _userAvatarRepository;
+  final ChatRepository _chatRepository;
 
-  ProfilePageBloc(this._authRepository, this._userRepository, this._userAvatarRepository)
-      : super(ProfilePageState(false, const UserProfile(userId: ""), null, null));
+  ProfilePageBloc(this._authRepository, this._userRepository,
+      this._userAvatarRepository, this._chatRepository)
+      : super(
+            ProfilePageState(false, const UserProfile(userId: ""), null, null));
 
   @override
   Stream<ProfilePageState> mapEventToState(ProfilePageEvent event) async* {
@@ -90,20 +98,24 @@ class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
     }
   }
 
-  Stream<ProfilePageState> _mapChangeProfileUrlEventToState(ChangeProfileUrlEvent event) async* {
+  Stream<ProfilePageState> _mapChangeProfileUrlEventToState(
+      ChangeProfileUrlEvent event) async* {
     try {
       final url = event.url;
       final filename = event.filename;
       final currentFilename = state.userProfile.avatarFilename;
       if (currentFilename != null) {
-        await _userAvatarRepository.deleteFile(currentFilename);
+        await _userAvatarRepository.deleteAvatar(currentFilename);
       }
-      final updatedUser = state.userProfile.copyWith(avatarUrl: url, avatarFilename: filename);
+      final updatedUser =
+          state.userProfile.copyWith(avatarUrl: url, avatarFilename: filename);
       _userRepository.saveUser(updatedUser);
+      _chatRepository.updateAllAvatarsInChats(url);
       yield state.copyWith(avatarUrl: url, userProfile: updatedUser);
     } catch (ex, st) {
       Fimber.w("Failed to save user avatar url", ex: ex, stacktrace: st);
-      yield state.copyWith(error: ex is AppError ? ex.type : ErrorType.generalError);
+      yield state.copyWith(
+          error: ex is AppError ? ex.type : ErrorType.generalError);
     }
   }
 }

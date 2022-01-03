@@ -9,6 +9,7 @@ class CTSnackBar extends SnackBar {
       child: Text(text),
     ),
     behavior: SnackBarBehavior.floating,
+    duration: const Duration(seconds: 2),
     elevation: 0.0,
     action: action,
     backgroundColor: AppColors.snackbarGrey,

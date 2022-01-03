@@ -12,6 +12,8 @@ class CTTextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final bool enableInteractiveSelection;
   final bool obscureText;
+  final bool isMultiline;
+  final bool readOnly;
 
   CTTextFormField(this.onChanged,
       {this.autovalidate = false,
@@ -20,7 +22,9 @@ class CTTextFormField extends StatelessWidget {
       this.initialValue,
       this.focusNode,
       this.enableInteractiveSelection = true,
-      this.obscureText = false});
+      this.obscureText = false,
+      this.isMultiline = false,
+      this.readOnly = false});
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +32,15 @@ class CTTextFormField extends StatelessWidget {
       initialValue: initialValue,
       focusNode: focusNode,
       controller: controller,
-      autovalidate: autovalidate,
+      autovalidateMode: autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
       validator: formFieldValidator as String? Function(String?)?,
       obscureText: obscureText,
+      readOnly: readOnly,
       enableInteractiveSelection: enableInteractiveSelection,
       cursorColor: AppColors.textBlue.withOpacity(0.7),
       style: AppTypography.body3.copyWith(color: AppColors.textBlue),
       onChanged: onChanged,
+      maxLines: isMultiline ? null : 1,
       decoration: const InputDecoration(
           errorBorder: OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.errorRed),

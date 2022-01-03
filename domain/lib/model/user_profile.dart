@@ -16,23 +16,23 @@ class UserProfile extends Equatable {
 
   const UserProfile(
       {required this.userId,
-        this.firstName,
-        this.lastName,
-        this.email,
-        this.phoneNr,
-        this.avatarUrl,
-        this.avatarFilename,
-        this.creationDate});
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.phoneNr,
+      this.avatarUrl,
+      this.avatarFilename,
+      this.creationDate});
 
   UserProfile copyWith(
-      {String? userId,
-        String? firstName,
-        String? lastName,
-        String? email,
-        String? phoneNr,
-        String? avatarUrl,
-        String? avatarFilename,
-        DateTime? creationDate}) =>
+          {String? userId,
+          String? firstName,
+          String? lastName,
+          String? email,
+          String? phoneNr,
+          String? avatarUrl,
+          String? avatarFilename,
+          DateTime? creationDate}) =>
       UserProfile(
           userId: userId ?? this.userId,
           firstName: firstName ?? this.firstName,
@@ -43,18 +43,20 @@ class UserProfile extends Equatable {
           avatarFilename: avatarFilename ?? this.avatarFilename,
           creationDate: creationDate ?? this.creationDate);
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
+
   @override
   List<Object?> get props => [
-    userId,
-    firstName,
-    lastName,
-    email,
-    phoneNr,
-    avatarUrl,
-    avatarFilename,
-    creationDate
-  ];
+        userId,
+        firstName,
+        lastName,
+        email,
+        phoneNr,
+        avatarUrl,
+        avatarFilename,
+        creationDate
+      ];
 }

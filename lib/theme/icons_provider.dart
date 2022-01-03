@@ -27,6 +27,8 @@ class IconsProvider {
   static const TOOLS = "$ICONS_PATH/tools.svg";
   static const PROJECTS = "$ICONS_PATH/lightbulb.svg";
   static const PROFILE = "$ICONS_PATH/user.svg";
+  static const CHAT = "$ICONS_PATH/chat.svg";
+  static const LIST = "$ICONS_PATH/list.svg";
 
   static const TERMS = "$ICONS_PATH/terms.svg";
   static const LOGOUT = "$ICONS_PATH/logout.svg";

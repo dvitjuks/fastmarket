@@ -1,9 +1,7 @@
 import 'dart:io';
-
-import 'package:app/app/theme/colors.dart';
-import 'package:app/app/theme/custom_elevation.dart';
-import 'package:app/app/theme/typography.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fastmarket/theme/colors.dart';
+import 'package:fastmarket/theme/custom_elevation.dart';
+import 'package:fastmarket/theme/typography.dart';
 import 'package:flutter/material.dart';
 
 class CTButton extends StatelessWidget {
@@ -30,22 +28,22 @@ class CTButton extends StatelessWidget {
                         : AppColors.enabledShadow.withOpacity(0.16),
                     spreadRadius: 5,
                     blurRadius: 20,
-                    offset: Offset(0, 2))
+                    offset: const Offset(0, 2))
               ])
-            : BoxDecoration(),
+            : const BoxDecoration(),
         child: CustomElevation(
           color:
               onPressed == null ? AppColors.disabled1 : AppColors.accentPurple,
           child: MaterialButton(
             child: progress
-                ? CircularProgressIndicator(backgroundColor: AppColors.white,)
+                ? const CircularProgressIndicator.adaptive(backgroundColor: AppColors.white)
                 : Text(
                     text,
                     style: AppTypography.body2_bold,
                   ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
-            height: 64,
+            height: 48,
             elevation: 0.0,
             disabledElevation: 0.0,
             focusElevation: 0.0,
@@ -60,7 +58,7 @@ class CTButton extends StatelessWidget {
         ));
   }
 
-  Color getTextColor() => invert ? AppColors.accentPurple : AppColors.white;
+  Color getTextColor() => invert ? AppColors.patternBlue : AppColors.white;
 
-  Color getColor() => invert ? AppColors.white : AppColors.accentPurple;
+  Color getColor() => invert ? AppColors.white : AppColors.patternBlue;
 }

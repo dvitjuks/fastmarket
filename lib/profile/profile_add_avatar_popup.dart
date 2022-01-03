@@ -13,7 +13,9 @@ class ProfileAvatarPopup extends StatelessWidget {
     return Container();
   }
 
-  static void showPhotoOptions(BuildContext context, UploadImageCallback uploadFileCallback, {bool onRegistration = false}) async {
+  static void showPhotoOptions(
+      BuildContext context, UploadImageCallback uploadFileCallback,
+      {bool onRegistration = false}) async {
     final popup = FMPopup(
       title: null,
       actions: <Widget>[
@@ -24,45 +26,53 @@ class ProfileAvatarPopup extends StatelessWidget {
     await popup.selectedValue(context);
   }
 
-  static Widget _takeAPhotoAction(BuildContext context, UploadImageCallback uploadFileCallback, bool onRegistration) {
+  static Widget _takeAPhotoAction(BuildContext context,
+      UploadImageCallback uploadFileCallback, bool onRegistration) {
     return FMPopupAction(
       onPressed: () {
         Navigator.pop(context);
-        _selectImage(context, ImageSource.camera, uploadFileCallback, onRegistration);
+        _selectImage(
+            context, ImageSource.camera, uploadFileCallback, onRegistration);
       },
       title: "Take a photo",
     );
   }
 
-  static Widget _uploadFromGalleryAction(BuildContext context, UploadImageCallback uploadFileCallback, bool onRegistration) {
+  static Widget _uploadFromGalleryAction(BuildContext context,
+      UploadImageCallback uploadFileCallback, bool onRegistration) {
     return FMPopupAction(
       onPressed: () {
         Navigator.pop(context);
-        _selectImage(context, ImageSource.gallery, uploadFileCallback, onRegistration);
+        _selectImage(
+            context, ImageSource.gallery, uploadFileCallback, onRegistration);
       },
       title: "Upload from gallery",
     );
   }
 
-  static void _selectImage(BuildContext context, ImageSource source, UploadImageCallback uploadFileCallback, bool onRegistration) async {
-      await grandPermission(context, source);
-      final imagePicker = ImagePicker();
-      final xFile = await imagePicker.pickImage(source: source);
-      if (xFile != null) {
-        final file = File(xFile.path);
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) =>
-                AddPhotoCropPage.withBloc(
-                    uploadFileCallback, file, source))
-        );
-      }
+  static void _selectImage(BuildContext context, ImageSource source,
+      UploadImageCallback uploadFileCallback, bool onRegistration) async {
+    await grandPermission(context, source);
+    final imagePicker = ImagePicker();
+    final xFile = await imagePicker.pickImage(
+        source: source, preferredCameraDevice: CameraDevice.front);
+    if (xFile != null) {
+      final file = File(xFile.path);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  AddPhotoCropPage.withBloc(uploadFileCallback, file, source)));
+    }
   }
 
-  static Future<void> grandPermission(BuildContext context, ImageSource source) async {
-    if (source == ImageSource.camera && await Permission.camera.status.isDenied) {
+  static Future<void> grandPermission(
+      BuildContext context, ImageSource source) async {
+    if (source == ImageSource.camera &&
+        await Permission.camera.status.isDenied) {
       await Permission.camera.request();
-    } else if (source == ImageSource.gallery && await Permission.photos.status.isDenied) {
+    } else if (source == ImageSource.gallery &&
+        await Permission.photos.status.isDenied) {
       await Permission.photos.request();
     }
   }

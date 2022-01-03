@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:domain/model/error_type.dart';
-import 'package:domain/repository/user_avatar_repository.dart';
+import 'package:domain/repository/image_upload_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,12 +17,12 @@ class AddPhotoCropState extends Equatable {
   final ErrorType? errorType;
   final bool shouldDisableButtons;
 
-  AddPhotoCropState(this.uploadedUrl, this.uploadedFilename, this.isLoading, this.errorType,
-      this.shouldDisableButtons);
+  AddPhotoCropState(this.uploadedUrl, this.uploadedFilename, this.isLoading,
+      this.errorType, this.shouldDisableButtons);
 
   AddPhotoCropState copyWith(
           {String? uploadedUrl,
-            String? uploadedFilename,
+          String? uploadedFilename,
           bool? isLoading,
           ErrorType? errorType,
           bool? shouldDisableButtons}) =>
@@ -36,8 +36,13 @@ class AddPhotoCropState extends Equatable {
   bool addPhotoButtonsLoading() => isLoading && !shouldDisableButtons;
 
   @override
-  List<Object?> get props =>
-      [uploadedUrl, uploadedFilename, isLoading, errorType, shouldDisableButtons];
+  List<Object?> get props => [
+        uploadedUrl,
+        uploadedFilename,
+        isLoading,
+        errorType,
+        shouldDisableButtons
+      ];
 }
 
 abstract class AddPhotoCropEvent extends Equatable {
@@ -57,7 +62,7 @@ class AddPhotoCropUploadEvent extends AddPhotoCropEvent {
 }
 
 class AddPhotoCropBloc extends Bloc<AddPhotoCropEvent, AddPhotoCropState> {
-  final UserAvatarRepository _userAvatarRepository;
+  final ImageUploadRepository _userAvatarRepository;
 
   AddPhotoCropBloc(this._userAvatarRepository)
       : super(AddPhotoCropState(null, null, false, null, false));
@@ -71,21 +76,21 @@ class AddPhotoCropBloc extends Bloc<AddPhotoCropEvent, AddPhotoCropState> {
 
   Stream<AddPhotoCropState> _mapUploadEvent(
       AddPhotoCropUploadEvent event) async* {
-    yield state.copyWith(
-        isLoading: true, shouldDisableButtons: true);
+    yield state.copyWith(isLoading: true, shouldDisableButtons: true);
     try {
       Uint8List imageInUnit8List = event.fileData;
       final tempDir = await getTemporaryDirectory();
       File file = await File('${tempDir.path}/image.png').create();
       file.writeAsBytesSync(imageInUnit8List);
       final ext = extension(file.path);
-      final imgData = await _userAvatarRepository.uploadFile(
-          file, ext);
-      yield state.copyWith(isLoading: false, uploadedUrl: imgData.first, uploadedFilename: imgData.last);
+      final imgData = await _userAvatarRepository.uploadAvatar(file, ext);
+      yield state.copyWith(
+          isLoading: false,
+          uploadedUrl: imgData.first,
+          uploadedFilename: imgData.last);
     } catch (ex, st) {
       Fimber.w("Failed to upload profile avatar", ex: ex, stacktrace: st);
-      yield state.copyWith(
-          isLoading: false, errorType: ErrorType.generalError);
+      yield state.copyWith(isLoading: false, errorType: ErrorType.generalError);
     }
   }
 }

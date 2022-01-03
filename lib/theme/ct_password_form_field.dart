@@ -1,7 +1,6 @@
 import 'package:fastmarket/theme/colors.dart';
 import 'package:fastmarket/theme/icons_provider.dart';
 import 'package:fastmarket/theme/typography.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -34,7 +33,7 @@ class _CTPasswordFormFieldState extends State<CTPasswordFormField> {
           onFieldSubmitted: (_) {
             widget.onFieldSubmitted?.call();
           },
-          autovalidate: widget.autovalidate,
+          autovalidateMode: widget.autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
           validator: widget.validator as String? Function(String?)?,
           obscureText: !_showPassword,
           cursorColor: AppColors.textBlue.withOpacity(0.7),

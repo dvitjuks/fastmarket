@@ -14,11 +14,9 @@ class MainPageState extends Equatable {
   MainPageState(this.progress, this.userProfile, this.error);
 
   MainPageState copyWith(
-      {bool? progress,
-        UserProfile? userProfile,
-        ErrorType? error}) =>
-      MainPageState(progress ?? this.progress, userProfile ?? this.userProfile, error);
-
+          {bool? progress, UserProfile? userProfile, ErrorType? error}) =>
+      MainPageState(
+          progress ?? this.progress, userProfile ?? this.userProfile, error);
 
   @override
   List<Object?> get props => [progress, userProfile, error];
@@ -35,8 +33,7 @@ class ClearErrorEvent extends MainPageEvent {}
 
 class LogoutEvent extends MainPageEvent {}
 
-class MainPageBloc
-    extends Bloc<MainPageEvent, MainPageState> {
+class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
 
@@ -44,8 +41,7 @@ class MainPageBloc
       : super(MainPageState(false, null, null));
 
   @override
-  Stream<MainPageState> mapEventToState(
-      MainPageEvent event) async* {
+  Stream<MainPageState> mapEventToState(MainPageEvent event) async* {
     if (event is ClearErrorEvent) {
       yield state.copyWith(error: null);
     } else if (event is LogoutEvent) {
@@ -62,8 +58,7 @@ class MainPageBloc
     } catch (ex, st) {
       Fimber.w("Failed to log out", ex: ex, stacktrace: st);
       yield state.copyWith(
-          error: (ex is AppError ? ex.type : ErrorType.generalError)
-      );
+          error: (ex is AppError ? ex.type : ErrorType.generalError));
     }
   }
 

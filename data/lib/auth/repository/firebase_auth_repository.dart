@@ -1,11 +1,12 @@
 import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:domain/model/error_type.dart';
 import 'package:domain/model/user_profile.dart';
 import 'package:domain/repository/auth_repository.dart';
 import 'package:domain/repository/user_repository.dart';
 import 'package:fimber/fimber.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthRepository extends AuthRepository {
@@ -44,18 +45,20 @@ class FirebaseAuthRepository extends AuthRepository {
   Future<void> createProfile(
       String? firstName, String? lastName, String? photoUrl) async {
     final String? userId = FirebaseAuth.instance.currentUser?.uid;
+    final String? email = FirebaseAuth.instance.currentUser?.email;
+    final DateTime? createdAt = FirebaseAuth.instance.currentUser?.metadata.creationTime;
     if (userId != null) {
       try {
-        await FirebaseDatabase.instance
-            .reference()
-            .child("users/")
-            .child(userId)
-            .child("user_profile")
-            .update(UserProfile(
+        CollectionReference users = FirebaseFirestore.instance
+            .collection('users');
+        await users.doc(userId)
+            .set(UserProfile(
                     userId: userId,
+                    email: email,
                     firstName: firstName ?? "Name",
                     lastName: lastName ?? "Surname",
-                    avatarUrl: photoUrl)
+                    avatarUrl: photoUrl,
+                    creationDate: createdAt)
                 .toJson());
         await setUpUser(userId);
       } catch (ex, st) {
@@ -169,12 +172,9 @@ class FirebaseAuthRepository extends AuthRepository {
             : fullNameToDisplay = ["", ""];
         final userId = FirebaseAuth.instance.currentUser?.uid;
         if (userId != null) {
-          final noProfileYet = await FirebaseDatabase.instance
-              .reference()
-              .child("users/")
-              .child(userId)
-              .once()
-              .then((value) => !value.exists);
+          CollectionReference users = FirebaseFirestore.instance
+              .collection('users');
+          final noProfileYet = await users.doc(userId).get().then((value) => !value.exists);
           if (noProfileYet) {
             await createProfile(
                 fullNameToDisplay.first, fullNameToDisplay.last, avatarUrl);
