@@ -52,14 +52,17 @@ class _AllChatsPageState extends State<AllChatsPage> {
                                   ? 1
                                   : 0;
 
-                          return ChatListTile(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChatroomScreen.withBloc(chatroom)));
-                              },
-                              chatRoom: chatroom,
-                              notMyIndex: notMyIndex);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: ChatListTile(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChatroomScreen.withBloc(chatroom)));
+                                },
+                                chatRoom: chatroom,
+                                notMyIndex: notMyIndex),
+                          );
                         },
                         itemCount: data.length));
               } else {

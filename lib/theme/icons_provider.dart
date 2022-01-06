@@ -108,6 +108,7 @@ class IconsProvider {
   static const SHOPPING_TYPE_FIBERFILL = "$ICONS_PATH/shopping_type_fiberfill.svg";
   static const SHOPPING_TYPE_EYES = "$ICONS_PATH/shopping_type_eyes.svg";
   static const SHOPPING_TYPE_OTHER = "$ICONS_PATH/shopping_type_other.svg";
+  static const SHOPPING_LIST = "$ICONS_PATH/shopping_list.svg";
 
   static const SHOPPING_ACTIVE_EMPTY_STATE = "$ICONS_PATH/shopping_items_active_empty_state.png";
   static const SHOPPING_COMPLETED_EMPTY_STATE = "$ICONS_PATH/shopping_items_completed_empty_state.png";
@@ -125,4 +126,6 @@ class IconsProvider {
   static const ONBOARDING_BG_FOURTH = "$ICONS_PATH/onboarding_bg_4.svg";
   static const ONBOARDING_BG_FIFTH = "$ICONS_PATH/onboarding_bg_5.svg";
   static const ONBOARDING_BG_SIXTH = "$ICONS_PATH/onboarding_bg_6.svg";
+
+  static const HANDSHAKE = "$ICONS_PATH/handshake.svg";
 }

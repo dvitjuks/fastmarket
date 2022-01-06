@@ -7,6 +7,7 @@ import 'package:fastmarket/theme/icons_provider.dart';
 import 'package:fastmarket/theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MainLoginPage extends StatefulWidget {
   @override
@@ -51,17 +52,10 @@ class _MainLoginPageState extends State<MainLoginPage> {
   Widget _buildImage() => SafeArea(
           child: Padding(
         padding: const EdgeInsets.only(top: 48),
-        child: Container(
-          color: AppColors.progressGreen,
+        child: SvgPicture.asset(IconsProvider.HANDSHAKE,
           height: 250,
           width: 250,
-          child: Center(
-            child: Text(
-              "Place for logo",
-              textAlign: TextAlign.center,
-              style: AppTypography.title.copyWith(color: AppColors.textBlue),
-            ),
-          ),
+          color: AppColors.textBlue,
         ),
       ));
 

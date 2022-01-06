@@ -55,8 +55,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
         backgroundColor: AppColors.white,
         brightness: Brightness.light,
         leading: CTBackButton(
-          AppColors.accentPurple,
-          AppColors.accentPurple,
+          AppColors.textBlue,
+          AppColors.textBlue,
           padding: 12,
         ),
       ),

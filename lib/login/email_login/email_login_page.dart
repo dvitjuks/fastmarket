@@ -8,7 +8,6 @@ import 'package:fastmarket/theme/ct_password_form_field.dart';
 import 'package:fastmarket/theme/ct_snackbar.dart';
 import 'package:fastmarket/theme/ct_text_form_field.dart';
 import 'package:fastmarket/theme/typography.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -118,13 +117,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   Widget _buildPasswordLabel() => Padding(
     padding: const EdgeInsets.only(top: 32),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           "Password",
           style: AppTypography.body3.copyWith(color: AppColors.mainGrey),
         ),
-        _buildForgotPasswordLabel()
       ],
     ),
   );
@@ -135,21 +133,6 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           (value) {
         _bloc.add(SetPasswordEvent(value));
       },
-    ),
-  );
-
-  Widget _buildForgotPasswordLabel() => GestureDetector(
-    onTap: () {
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => ForgotPasswordPage.withBloc()));
-    },
-    child: RichText(
-      text: TextSpan(children: [
-        TextSpan(
-            text: "Forgot password",
-            style: AppTypography.body3_bold
-                .copyWith(color: AppColors.textBlue))
-      ]),
     ),
   );
 
