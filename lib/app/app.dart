@@ -37,11 +37,8 @@ class _AppState extends State<App> {
     _authStream =
         FirebaseAuth.instance.authStateChanges().take(1).listen((user) async {
       if (user != null) {
-
-        print("set up user" + "$user");
         _bloc.add(SetUpUserEvent());
       } else {
-        print("go to login");
         await loadCurrentState();
         _navKey.currentState?.pushNamedAndRemoveUntil(
             AppRoutes.login, (Route<dynamic> route) => false);

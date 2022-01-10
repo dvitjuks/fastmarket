@@ -18,7 +18,7 @@ class CachedNetworkAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const placeholder =
-        "https://media.istockphoto.com/vectors/thumbnail-image-vector-graphic-vector-id1147544807?k=20&m=1147544807&s=612x612&w=0&h=pBhz1dkwsCMq37Udtp9sfxbjaMl27JUapoyYpQm0anc=";
+        "https://firebasestorage.googleapis.com/v0/b/fast-market-48da0.appspot.com/o/appImages%2FProfile_avatar_placeholder_large.png?alt=media&token=9e8f83b6-52dd-49ff-9791-159bafd526bc";
     return CachedNetworkImage(
         imageUrl: imageUrl ?? placeholder,
         imageBuilder: (context, imageProvider) => Container(

@@ -5,6 +5,8 @@ import 'package:domain/model/advertisement.dart';
 abstract class AdvertisementRepository {
   Future<void> publishAdvertisement(Advertisement advert);
 
+  Future<void> saveAdvertisement(Advertisement advert);
+
   Future<List<Advertisement>> getAdvertisements(String? category);
 
   Future<List<Advertisement>> getMoreAdvertisements(String? category);

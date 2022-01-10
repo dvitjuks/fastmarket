@@ -10,13 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatroomScreen extends StatefulWidget {
+  final String? avatarUrl;
+  final String fullName;
+
+  const ChatroomScreen({required this.avatarUrl, required this.fullName});
+
   @override
   _ChatroomScreenState createState() => _ChatroomScreenState();
 
-  static Widget withBloc(ChatRoom chatRoom) => BlocProvider(
+  static Widget withBloc(ChatRoom chatRoom, String? avatarUrl, String fullName) => BlocProvider(
         create: (context) => ChatroomScreenBloc(context.read(), context.read())
           ..add(LoadEvent(chatRoom)),
-        child: ChatroomScreen(),
+        child: ChatroomScreen(avatarUrl: avatarUrl, fullName: fullName),
       );
 }
 
@@ -52,11 +57,11 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CachedNetworkAvatar(
-                  width: 36, height: 36, imageUrl: state.contact.avatarUrl),
+                  width: 36, height: 36, imageUrl: widget.avatarUrl),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                    "${state.contact.firstName} ${state.contact.lastName}",
+                    widget.fullName,
                     style: AppTypography.app_bar
                         .copyWith(color: AppColors.textBlue)),
               ),

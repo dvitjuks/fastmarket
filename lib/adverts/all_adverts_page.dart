@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fastmarket/adverts/advert_details/advert_details_page.dart';
 import 'package:fastmarket/adverts/advert_list_tile.dart';
@@ -15,7 +14,9 @@ class AllAdvertsPage extends StatefulWidget {
   @override
   _AllAdvertsPageState createState() => _AllAdvertsPageState();
 
+  //Create bloc on widget initialization
   static Widget withBloc() => BlocProvider(
+    //Add load event right after bloc creation
       create: (context) => AllAdvertsPageBloc(context.read())..add(LoadEvent()),
       child: AllAdvertsPage());
 }
@@ -29,6 +30,7 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
   void initState() {
     _bloc = context.read();
     _controller.addListener(() {
+      //If list reaches max extent - 100px -> load more adverts
       if (_controller.position.pixels >=
               _controller.position.maxScrollExtent - 100 &&
           !_bloc.state.loadingNewData) {
@@ -36,6 +38,7 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
       }
     });
     _refreshStream = _bloc.refreshStream().listen((event) async {
+      //If refresh stream yields new value -> load adverts again
       _bloc.add(LoadEvent());
     });
     super.initState();
@@ -43,6 +46,7 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
 
   @override
   void dispose() {
+    //Don't forget to dispose controllers and sreams on end of widget lifecycle
     _refreshStream?.cancel();
     _controller.dispose();
     super.dispose();
@@ -50,21 +54,23 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
 
   @override
   Widget build(BuildContext context) {
+    //Return bloc builder to feed body widget the latest state of bloc
     return BlocBuilder<AllAdvertsPageBloc, AllAdvertsPageState>(
         builder: (context, state) {
       return _buildBody(state);
     });
   }
 
+  //Build adverts depending on state of the bloc
   Widget _buildAdverts(AllAdvertsPageState state) {
-    if (state.progress) {
+    if (state.progress) { //Loading body
       return Container(
         height: MediaQuery.of(context).size.width,
         padding:
             const EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
         child: const Center(child: CircularProgressIndicator.adaptive()),
       );
-    } else if (state.allAdverts.isEmpty) {
+    } else if (state.allAdverts.isEmpty) { //Empty body
       return Container(
           padding:
               const EdgeInsets.only(top: 160, bottom: 16, left: 16, right: 16),
@@ -79,12 +85,13 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
               ],
             ),
           ));
-    } else {
+    } else { //Body with adverts
       return Expanded(
         child: Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: ListView.builder(
-              controller: _controller,
+            //Use builder to save resources/unload unrendered elements
+              controller: _controller, //Controller for pagination
               itemBuilder: (item, index) {
                 final advert = state.allAdverts[index];
                 return AdvertListTile(
@@ -101,9 +108,11 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
     }
   }
 
+  //Body of the page, receives bloc's state
   Widget _buildBody(AllAdvertsPageState state) => Scaffold(
         appBar: AppBar(
           actions: <Widget>[
+            //Button to refresh adverts manually
             Padding(
                 padding: const EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
@@ -126,6 +135,7 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
               padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
               child: Column(
                 children: [
+                  //Category selector
                   const Align(
                       child: Text("Select category:"),
                       alignment: Alignment.centerLeft),
@@ -160,15 +170,17 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
                         );
                       },
                       onChanged: (category) {
+                        //When user changes category -> trigger bloc event
                         if (category != null &&
                             category != state.selectedCategory) {
                           _bloc.add(SetCategoryEvent(category));
                         }
                       },
                       selectedItem: state.selectedCategory),
-                  _buildAdverts(state)
+                  _buildAdverts(state) //Build adverts body
                 ],
               )),
+          //Button to add new advert
           Positioned(
               right: 24,
               bottom: 24,
@@ -179,9 +191,6 @@ class _AllAdvertsPageState extends State<AllAdvertsPage> {
                     await showFMModalBottomSheet(
                         context: context,
                         builder: (context) => CreateAdvertPage.withBloc());
-                    // if (result == true) {
-                    //   _bloc.add(LoadEvent());
-                    // }
                   }))
         ]),
       );

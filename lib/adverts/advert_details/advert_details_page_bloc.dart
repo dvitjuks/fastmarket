@@ -7,9 +7,7 @@ import 'package:domain/repository/chat_repository.dart';
 import 'package:domain/repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fimber/fimber.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:domain/repository/image_upload_repository.dart';
 
 class AdvertDetailsPageState extends Equatable {
   final Advertisement advertisement;
@@ -17,34 +15,48 @@ class AdvertDetailsPageState extends Equatable {
   final ErrorType? error;
   final bool advertWasPublished;
   final bool redirectToChat;
+  final bool editModeOn;
   final ChatRoom? redirectedChatRoom;
+  final bool saving;
 
-  const AdvertDetailsPageState(this.advertisement, this.owner, this.error,
-      this.advertWasPublished, this.redirectToChat, this.redirectedChatRoom);
+  const AdvertDetailsPageState(this.advertisement,
+      this.owner,
+      this.error,
+      this.advertWasPublished,
+      this.redirectToChat,
+      this.editModeOn,
+      this.redirectedChatRoom,
+      this.saving);
 
-  AdvertDetailsPageState copyWith(
-          {Advertisement? advertisement,
-          UserProfile? owner,
-          ErrorType? error,
-          bool? advertWasPublished,
-          bool? redirectToChat,
-          ChatRoom? redirectedChatRoom}) =>
+  AdvertDetailsPageState copyWith({Advertisement? advertisement,
+    UserProfile? owner,
+    ErrorType? error,
+    bool? advertWasPublished,
+    bool? redirectToChat,
+    bool? editModeOn,
+    ChatRoom? redirectedChatRoom,
+    bool? saving}) =>
       AdvertDetailsPageState(
           advertisement ?? this.advertisement,
           owner ?? this.owner,
           error,
           advertWasPublished ?? this.advertWasPublished,
           redirectToChat ?? this.redirectToChat,
-          redirectedChatRoom ?? this.redirectedChatRoom);
+          editModeOn ?? this.editModeOn,
+          redirectedChatRoom ?? this.redirectedChatRoom,
+          saving ?? this.saving);
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props =>
+      [
         advertisement,
         owner,
         error,
         advertWasPublished,
         redirectToChat,
-        redirectedChatRoom
+        editModeOn,
+        redirectedChatRoom,
+        saving
       ];
 }
 
@@ -104,25 +116,31 @@ class ContactSellerEvent extends AdvertDetailsPageEvent {}
 
 class ClearErrorEvent extends AdvertDetailsPageEvent {}
 
+class EnterEditModeEvent extends AdvertDetailsPageEvent {}
+
 class AdvertDetailsPageBloc
     extends Bloc<AdvertDetailsPageEvent, AdvertDetailsPageState> {
   final UserRepository _userRepository;
   final ChatRepository _chatRepository;
+  final AdvertisementRepository _advertisementRepository;
 
-  AdvertDetailsPageBloc(this._userRepository, this._chatRepository)
+  AdvertDetailsPageBloc(this._userRepository, this._chatRepository,
+      this._advertisementRepository)
       : super(AdvertDetailsPageState(
-            Advertisement(
-                adId: "",
-                ownerId: "",
-                title: "",
-                description: "",
-                category: "",
-                createdAt: DateTime.utc(2022, 1, 1)),
-            null,
-            null,
-            false,
-            false,
-            null));
+      Advertisement(
+          adId: "",
+          ownerId: "",
+          title: "",
+          description: "",
+          category: "",
+          createdAt: DateTime.utc(2022, 1, 1)),
+      null,
+      null,
+      false,
+      false,
+      false,
+      null,
+      false));
 
   @override
   Stream<AdvertDetailsPageState> mapEventToState(
@@ -133,6 +151,19 @@ class AdvertDetailsPageBloc
       yield* _mapLoadEventToState(event);
     } else if (event is ContactSellerEvent) {
       yield* _mapContactSellerEventToState();
+    } else if (event is EnterEditModeEvent) {
+      yield state.copyWith(editModeOn: true);
+    } else if (event is SaveEvent) {
+      yield* _mapSaveEventToState();
+    } else if (event is SetTitleEvent) {
+      yield state.copyWith(
+          advertisement: state.advertisement.copyWith(title: event.title));
+    } else if (event is SetCategoryEvent) {
+      yield state.copyWith(advertisement: state.advertisement.copyWith(
+          category: event.category));
+    } else if (event is SetDescriptionEvent) {
+      yield state.copyWith(advertisement: state.advertisement.copyWith(
+          description: event.description));
     }
   }
 
@@ -146,6 +177,18 @@ class AdvertDetailsPageBloc
       owner = null;
     }
     yield state.copyWith(advertisement: advert, owner: owner);
+  }
+
+  Stream<AdvertDetailsPageState> _mapSaveEventToState() async* {
+    yield state.copyWith(saving: true, editModeOn: false);
+    try {
+      final advert = state.advertisement;
+      await _advertisementRepository.saveAdvertisement(advert);
+      yield state.copyWith(saving: false);
+    } catch (ex, st) {
+      Fimber.w("Couldn't save advertisement", ex: ex, stacktrace: st);
+      yield state.copyWith(error: ErrorType.generalError, saving: false);
+    }
   }
 
   Stream<AdvertDetailsPageState> _mapContactSellerEventToState() async* {
@@ -168,7 +211,8 @@ class AdvertDetailsPageBloc
   ChatRoom _createChatRoom(UserProfile user1, UserProfile user2) {
     final first = user1.userId.compareTo(user2.userId);
     var chatRoomId;
-    List<String> userIds, fullUsernames = [];
+    List<String> userIds,
+        fullUsernames = [];
     List<String?> userAvatars = [];
     if (first == -1) {
       chatRoomId = user1.userId + '_' + user2.userId;

@@ -118,7 +118,7 @@ class _MyAdvertsPageState extends State<MyAdvertsPage> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    AdvertDetailsPage.withBloc(advert)));
+                                    AdvertDetailsPage.withBloc(advert, allowEdit: true)));
                           },
                           advertisement: advert),
                     );

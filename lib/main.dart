@@ -22,20 +22,21 @@ Future<void> main() async {
   Fimber.plantTree(DebugTree());
 
   final UserRepository userRepository = FirebaseUserRepository();
-  final FireBaseImagesStorageRepository imageUploadRepository = FireBaseImagesStorageRepository();
+  final FireBaseImagesStorageRepository imageUploadRepository =
+      FireBaseImagesStorageRepository();
 
   runApp(MultiRepositoryProvider(
     providers: [
-      RepositoryProvider<AuthRepository>
-        (create: (context) => FirebaseAuthRepository(userRepository)),
-      RepositoryProvider<UserRepository>(
-          create: (context) => userRepository),
-      RepositoryProvider<ImageUploadRepository>(create: (context) => imageUploadRepository),
-      RepositoryProvider<AdvertisementRepository>(create: (context) => FirebaseAdvertRepository(imageUploadRepository)),
-      RepositoryProvider<ChatRepository>(create: (context) => FirebaseChatRepository())
+      RepositoryProvider<AuthRepository>(
+          create: (context) => FirebaseAuthRepository(userRepository)),
+      RepositoryProvider<UserRepository>(create: (context) => userRepository),
+      RepositoryProvider<ImageUploadRepository>(
+          create: (context) => imageUploadRepository),
+      RepositoryProvider<AdvertisementRepository>(
+          create: (context) => FirebaseAdvertRepository(imageUploadRepository)),
+      RepositoryProvider<ChatRepository>(
+          create: (context) => FirebaseChatRepository())
     ],
     child: App.withBloc(),
   ));
 }
-
-

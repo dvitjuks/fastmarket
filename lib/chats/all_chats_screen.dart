@@ -46,7 +46,7 @@ class _AllChatsPageState extends State<AllChatsPage> {
                     child: ListView.builder(
                         itemBuilder: (context, index) {
                           final chatroom = data[index];
-                          int? notMyIndex;
+                          int notMyIndex;
                           notMyIndex =
                               (chatroom.participatingUserIds[0] == state.myUid)
                                   ? 1
@@ -58,7 +58,7 @@ class _AllChatsPageState extends State<AllChatsPage> {
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          ChatroomScreen.withBloc(chatroom)));
+                                          ChatroomScreen.withBloc(chatroom, chatroom.participatingUserAvatarUrls[notMyIndex], chatroom.participatingUserFullNames[notMyIndex])));
                                 },
                                 chatRoom: chatroom,
                                 notMyIndex: notMyIndex),

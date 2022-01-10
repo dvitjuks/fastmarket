@@ -116,21 +116,40 @@ class _CreateAdvertPageState extends State<CreateAdvertPage> {
                                 style: AppTypography.caption1),
                             const SizedBox(height: 4),
                             DropdownSearch<String>(
-                                mode: Mode.MENU,
-                                showSelectedItems: true,
-                                items: const [
-                                  "Electronics",
-                                  "Clothes",
-                                  "Vehicles",
-                                  "Hobby",
-                                  "Other"
-                                ],
-                                onChanged: (category) {
-                                  if (category != null) {
-                                    _bloc.add(SetCategoryEvent(category));
-                                  }
-                                },
-                                selectedItem: null),
+                              mode: Mode.MENU,
+                              showSelectedItems: true,
+                              items: const [
+                                "Electronics",
+                                "Clothes",
+                                "Vehicles",
+                                "Hobby",
+                                "Other"
+                              ],
+                              onChanged: (category) {
+                                if (category != null) {
+                                  _bloc.add(SetCategoryEvent(category));
+                                }
+                              },
+                              selectedItem: null,
+                              dropdownBuilder: (context, category) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(category ?? "",
+                                      style: AppTypography.body3),
+                                );
+                              },
+                              popupItemBuilder: (context, category, selected) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0, horizontal: 16.0),
+                                  child: Text(category,
+                                      style: AppTypography.body3.copyWith(
+                                          color: selected
+                                              ? AppColors.textBlack
+                                              : AppColors.disabledShadow)),
+                                );
+                              },
+                            ),
                             const SizedBox(height: 32),
                             const Text("Description:",
                                 style: AppTypography.caption1),
